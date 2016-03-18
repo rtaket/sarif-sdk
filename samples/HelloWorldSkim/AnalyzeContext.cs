@@ -70,6 +70,8 @@ namespace HelloWorldSkim
             }
             set
             {
+                // When the TargetUri is set, the setter is responsible for assigning the appropriate
+                // values for TargetLoadException and IsValidAnalysisTarget.
                 try
                 {
                     if (value == null)

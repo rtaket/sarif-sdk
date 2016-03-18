@@ -9,9 +9,11 @@ create an analysis tool which outputs results in the SARIF file format.
 2. AnalyzeCommand.cs
 
     AnalyzeComamnd drives the analysis. Most of the work is done by its base class, `AnalyzeCommandBase`. The only customization in AnalyzeCommand is to define which assemblies contain the skimmers (rules).  
-2. AnalyzeContext.cs
+3. AnalyzeContext.cs
 
     AnalyzeContext provides information about the target file and any configuration to be used during the analysis.  
+    Note: The driver SDK sets the TargetUri property to the file under analysis. It is the TargetUri's setter's responsiblity to set
+    the TargetLoadException and IsValidAnalysisTarget properties appropriately after loading the target file.
 4. Skimmers\HelloWorldSkimmer.cs
 
     A skimmer (rule) which verifies if the word 'helloworld' exists in the target file. The skimmer makes itself available for analysis
