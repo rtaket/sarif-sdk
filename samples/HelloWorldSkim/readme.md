@@ -14,10 +14,11 @@ create an analysis tool which outputs results in the SARIF file format.
     Determines if a target is valid for processing by the skimmers.  
 4. Skimmers\HelloWorldSkimmer.cs
 
-    A skimmer (rule) which verifies if the word 'helloworld' exists in the target file.  
-    The Analyze() command performs the verification and logs any results to the loggers.  
-    If no output file is specified on the command line, the log is only written to the console.  
-    If an output file is specified on the command line, the log is also written to the output file in the SARIF format.  
+    A skimmer (rule) which verifies if the word 'helloworld' exists in the target file. The skimmer makes itself available for analysis
+by exporting the ISkimmer interface.
+`[Export(typeof(ISkimmer<AnalyzeContext>))]`   
+    The Analyze() command is called for each target being analyzed. It is responsible for performing the verification and writing results to the loggers.  
+    If no output file is specified on the command line, the log is only written to the console. If an output file is specified on the command line, the log is also written to the output file in the SARIF format.  
 
 ## How to Run
 ````
