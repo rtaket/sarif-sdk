@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PackageManifest Version="2.0.0" xmlns="http://schemas.microsoft.com/developer/vsx-schema/2011" xmlns:d="http://schemas.microsoft.com/developer/vsx-schema-design/2011">
+  <Metadata>
+    <Identity Id="Sarif.Driver.ProjectTemplate.Microsoft.f216a077-27c3-43f9-866f-bc08c0ac9ad1" Version="1.0" Language="en-US" Publisher="Microsoft" />
+    <DisplayName>Binary Analysis Tool</DisplayName>
+    <Description xml:space="preserve">Create a binary analysis tool.</Description>
+  </Metadata>
+  <Installation>
+    <InstallationTarget Id="Microsoft.VisualStudio.Community" Version="[14.0]" />
+  </Installation>
+  <Dependencies>
+    <Dependency Id="Microsoft.Framework.NDP" DisplayName="Microsoft .NET Framework" d:Source="Manual" Version="[4.5,)" />
+  </Dependencies>
+  <Assets>
+    <Asset Type="Microsoft.VisualStudio.ProjectTemplate" d:Source="File" Path="ProjectTemplates" d:TargetPath="ProjectTemplates\Binary Analysis Tool.zip" />
+    <Asset Type="CommandLineParser.2.0.275-beta.nupkg" d:Source="File" Path="Packages\CommandLineParser.2.0.275-beta.nupkg" d:VsixSubPath="Packages" />  
+    <Asset Type="Essential.Diagnostics.1.2.501.0.nupkg" d:Source="File" Path="Packages\Essential.Diagnostics.1.2.501.0.nupkg" d:VsixSubPath="Packages" />  
+    <Asset Type="Microsoft.Composition.1.0.30.nupkg" d:Source="File" Path="Packages\Microsoft.Composition.1.0.30.nupkg" d:VsixSubPath="Packages" />  
+    <Asset Type="Newtonsoft.Json.8.0.1.nupkg" d:Source="File" Path="Packages\Newtonsoft.Json.8.0.1.nupkg" d:VsixSubPath="Packages" />  
+    <Asset Type="Sarif.Driver.1.4.34-beta.nupkg" d:Source="File" Path="Packages\Sarif.Driver.1.4.34-beta.nupkg" d:VsixSubPath="Packages" />  
+    <Asset Type="Sarif.Sdk.1.4.34-beta.nupkg" d:Source="File" Path="Packages\Sarif.Sdk.1.4.34-beta.nupkg" d:VsixSubPath="Packages" />  
+    <Asset Type="System.Collections.4.0.0.nupkg" d:Source="File" Path="Packages\System.Collections.4.0.0.nupkg" d:VsixSubPath="Packages" />  
+    <Asset Type="System.Collections.Immutable.1.1.37.nupkg" d:Source="File" Path="Packages\System.Collections.Immutable.1.1.37.nupkg" d:VsixSubPath="Packages" />  
+    <Asset Type="System.Diagnostics.Debug.4.0.0.nupkg" d:Source="File" Path="Packages\System.Diagnostics.Debug.4.0.0.nupkg" d:VsixSubPath="Packages" />  
+    <Asset Type="System.Globalization.4.0.0.nupkg" d:Source="File" Path="Packages\System.Globalization.4.0.0.nupkg" d:VsixSubPath="Packages" />  
+    <Asset Type="System.Linq.4.0.0.nupkg" d:Source="File" Path="Packages\System.Linq.4.0.0.nupkg" d:VsixSubPath="Packages" />  
+    <Asset Type="System.Resources.ResourceManager.4.0.0.nupkg" d:Source="File" Path="Packages\System.Resources.ResourceManager.4.0.0.nupkg" d:VsixSubPath="Packages" />  
+    <Asset Type="System.Runtime.4.0.0.nupkg" d:Source="File" Path="Packages\System.Runtime.4.0.0.nupkg" d:VsixSubPath="Packages" />  
+    <Asset Type="System.Runtime.Extensions.4.0.0.nupkg" d:Source="File" Path="Packages\System.Runtime.Extensions.4.0.0.nupkg" d:VsixSubPath="Packages" />  
+    <Asset Type="System.Threading.4.0.0.nupkg" d:Source="File" Path="Packages\System.Threading.4.0.0.nupkg" d:VsixSubPath="Packages" />  
+  </Assets>
+</PackageManifest>
