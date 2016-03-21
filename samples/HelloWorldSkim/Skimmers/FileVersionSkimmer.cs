@@ -45,7 +45,7 @@ namespace HelloWorldSkim.Skimmers
         {
             get
             {
-                return new Uri($"http://FileVersionSkimmer/rules/{this.Id.ToLowerInvariant()}");
+                return new Uri($"http://helloworldskimmer/rules/{this.Id.ToLowerInvariant()}");
             }
         }
 
@@ -61,7 +61,7 @@ namespace HelloWorldSkim.Skimmers
         {
             get
             {
-                return "FileVersionSkimmer";
+                return this.GetType().Name;
             }
         }
 

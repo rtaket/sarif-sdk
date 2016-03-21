@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace HelloWorldSkim
 {
-    [Verb("analyze", HelpText = "Analyze one or more text files for keywords.")]
+    [Verb("analyze", HelpText = "Analyze binary files for defects.")]
     internal class AnalyzeOptions : AnalyzeOptionsBase
     {
     }
