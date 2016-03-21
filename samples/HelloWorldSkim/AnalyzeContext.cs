@@ -6,13 +6,14 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.CodeAnalysis.Sarif;
 using System.IO;
+using System.Diagnostics;
 
 namespace HelloWorldSkim
 {
     class AnalyzeContext : IAnalysisContext
     {
         Uri _targetUri;
-        internal static string[] ValidExtensions = new string[] { ".txt", ".log" };
+        internal static string[] ValidExtensions = new string[] { ".dll", ".exe" };
 
         public bool IsValidAnalysisTarget
         {
@@ -30,7 +31,7 @@ namespace HelloWorldSkim
         {
             get
             {
-                return "text/plain";
+                return "application/octet-stream";
             }
             set
             {
@@ -62,6 +63,12 @@ namespace HelloWorldSkim
             set;
         }
 
+        public FileVersionInfo FileVersionInfo
+        {
+            get;
+            set;
+        }
+
         public Uri TargetUri
         {
             get
@@ -79,16 +86,29 @@ namespace HelloWorldSkim
                         throw new ArgumentNullException("TargetUri");
                     }
 
-                    string fileExtension = Path.GetExtension(value.LocalPath);
+                    // Set the backing field. 
+                    this._targetUri = value;
 
-                    this.IsValidAnalysisTarget = ValidExtensions.Contains(fileExtension, StringComparer.OrdinalIgnoreCase);
+                    string localPath = value.LocalPath;
+                    string fileExtension = Path.GetExtension(localPath);
+
+                    // Verify that the file is one of the expected file types and that it is a local file.
+                    if (!ValidExtensions.Contains(fileExtension, StringComparer.OrdinalIgnoreCase) || !File.Exists(localPath))
+                    {
+                        this.IsValidAnalysisTarget = false;
+                    }
+                    else
+                    {
+                        this.IsValidAnalysisTarget = true;
+
+                        // Set the file info for the target. This will be used by the skimmers to do their evaluation.
+                        this.FileVersionInfo = FileVersionInfo.GetVersionInfo(this._targetUri.LocalPath);
+                    }
                 }
                 catch (Exception e)
                 {
                     this.TargetLoadException = e;
                 }
-
-                this._targetUri = value;
             }
         }
 

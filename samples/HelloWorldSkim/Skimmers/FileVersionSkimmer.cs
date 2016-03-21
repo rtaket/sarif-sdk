@@ -11,15 +11,18 @@ using System.Threading.Tasks;
 namespace HelloWorldSkim.Skimmers
 {
     [Export(typeof(ISkimmer<AnalyzeContext>)), Export(typeof(IRuleDescriptor))]
-    class HelloWorldSkimmer : ISkimmer<AnalyzeContext>, IRuleDescriptor
+    class FileVersionSkimmer : ISkimmer<AnalyzeContext>, IRuleDescriptor
     {
         Dictionary<string, string> _formatSpecifiers;
 
-        public HelloWorldSkimmer()
+        public FileVersionSkimmer()
         {
+            // The first replacement string, {0}, is the name of the target file. It is supplied by the driver.
+            // All other replacement strings, {1}, {2}, etc, are supplied when logging the result.
             this._formatSpecifiers = new Dictionary<string, string>();
-            this._formatSpecifiers.Add("pass", "The word 'helloworld' was not found in the text file {0}");
-            this._formatSpecifiers.Add("fail", "The word 'helloworld' was found in the text file {0} on line {1}, column {2}");
+            this._formatSpecifiers.Add("pass", "The file {0} has a valid file version of {1}.");
+            this._formatSpecifiers.Add("emptyfileversion", "The file {0} contains an empty file version.");
+            this._formatSpecifiers.Add("zerofileversion", "The file {0} contains an invalid file version: {1}");
         }
 
         public Dictionary<string, string> FormatSpecifiers
@@ -42,7 +45,7 @@ namespace HelloWorldSkim.Skimmers
         {
             get
             {
-                return new Uri($"http://helloworldskimmer/rules/{this.Id.ToLowerInvariant()}");
+                return new Uri($"http://FileVersionSkimmer/rules/{this.Id.ToLowerInvariant()}");
             }
         }
 
@@ -50,7 +53,7 @@ namespace HelloWorldSkim.Skimmers
         {
             get
             {
-                return "HW0001";
+                return "EXAMPLE0001";
             }
         }
 
@@ -58,7 +61,7 @@ namespace HelloWorldSkim.Skimmers
         {
             get
             {
-                return "HelloWorldSkimmer";
+                return "FileVersionSkimmer";
             }
         }
 
@@ -82,32 +85,26 @@ namespace HelloWorldSkim.Skimmers
         {
             get
             {
-                return "Verifies a file does not contain the word 'helloworld'.";
+                return "Verifies that executables and libraries have valid file versions.";
             }
         }
 
         public void Analyze(AnalyzeContext context)
         {
-            string localFile = context.TargetUri.LocalPath;
-            string[] lines = File.ReadAllLines(localFile);
-            bool foundResult = false;
-
-            for (int i = 0; i < lines.Length; i++)
+            if (String.IsNullOrWhiteSpace(context.FileVersionInfo.FileVersion))
             {
-                int index = lines[i].IndexOf("helloworld", StringComparison.OrdinalIgnoreCase);
-
-                if (index >= 0)
-                {
-                    // Write failure/error to the SARIF log file.
-                    context.Logger.Log(this, RuleUtilities.BuildResult(ResultKind.Error, context, new Region(i + 1, index + 1, i + 1, index + 11, 0, 0, 0), "fail", localFile, i.ToString(), index.ToString()));
-                    foundResult = true;
-                }
+                // Write failure/error to the SARIF log file.
+                context.Logger.Log(this, RuleUtilities.BuildResult(ResultKind.Error, context, null, "emptyfileversion"));
             }
-
-            if (!foundResult)
+            else if (context.FileVersionInfo.FileMajorPart == 0 && context.FileVersionInfo.FileMinorPart == 0 && context.FileVersionInfo.FileBuildPart == 0 && context.FileVersionInfo.FilePrivatePart == 0)
+            {
+                // Write failure/error to the SARIF log file.
+                context.Logger.Log(this, RuleUtilities.BuildResult(ResultKind.Error, context, null, "zerofileversion", context.FileVersionInfo.FileVersion));
+            }
+            else
             {
                 // Write success/pass to the SARIF log file.
-                context.Logger.Log(this, RuleUtilities.BuildResult(ResultKind.Pass, context, null, "pass", localFile));
+                context.Logger.Log(this, RuleUtilities.BuildResult(ResultKind.Pass, context, null, "pass", context.FileVersionInfo.FileVersion));
             }
         }
 

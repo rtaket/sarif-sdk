@@ -92,7 +92,7 @@
     <Compile Include="AnalyzeOptions.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Skimmers\HelloWorldSkimmer.cs" />
+    <Compile Include="Skimmers\FileVersionSkimmer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
