@@ -1,5 +1,5 @@
 ﻿# HelloWorldSkim Sample
-The HelloWorldSkim sample verifies if text file contain the word 'helloworld'. It demonstrates how to consume the SARIF driver SDK to
+The HelloWorldSkim sample verifies if exe/dll files define a valid file version. It demonstrates how to consume the SARIF driver SDK to
 create an analysis tool which outputs results in the SARIF file format.
 
 ## Files
@@ -14,9 +14,9 @@ create an analysis tool which outputs results in the SARIF file format.
     AnalyzeContext provides information about the target file and any configuration to be used during the analysis.  
     Note: The driver SDK sets the TargetUri property to the file under analysis. It is the TargetUri's setter's responsiblity to set
     the TargetLoadException and IsValidAnalysisTarget properties appropriately after loading the target file.
-4. Skimmers\HelloWorldSkimmer.cs
+4. Skimmers\FileVersionSkimmer.cs
 
-    A skimmer (rule) which verifies if the word 'helloworld' exists in the target file. The skimmer makes itself available for analysis
+    A skimmer (rule) which verifies that exe/dlls have valid file versions. In the example skimmer, a valid file version is defined as a non-empty and non-zero file version. The skimmer makes itself available for analysis
 by exporting the ISkimmer interface.
 `[Export(typeof(ISkimmer<AnalyzeContext>))]`   
     The Analyze() command is called for each target being analyzed. It is responsible for performing the verification and writing results to the loggers.  
@@ -30,7 +30,7 @@ HelloWorldSkim.exe analyze -output C:\Temp\helloworldskim.sarif.json C:\Input
 ### Example Console Output
 ````
 Analyzing...
-C:\Input\bad.txt(1,1,1,11): error HW0001: The word 'helloworld' was found in the text file bad.txt on line C:\Input\bad.txt, column 0
+C:\Input\HelloWorldSkim.exe: error EXAMPLE0001: The file HelloWorldSkim.exe contains an invalid file version: 0.0.0.0
 
 Analysis completed successfully.
 ```
@@ -47,41 +47,33 @@ Analysis completed successfully.
         "version": "1.0.0"
       },
       "runInfo": {
-        "invocationInfo": "HelloWorldSkim.exe  -o C:\\Temp\\helloworldskim.sarif.json C:\\Input",
+        "invocationInfo": "HelloWorldSkim.exe  -o C:\\Temp\\helloworldskim.sarif.json C:\Input",
         "analysisTargets": [
           {
-            "uri": "file:///C:/Input/bad.txt"
+            "uri": "file:///C:/Input/HelloWorldSkim.exe"
           },
           {
-            "uri": "file:///C:/Input/good.txt"
+            "uri": "file:///C:/Input/Newtonsoft.Json.dll"
           }
         ]
       },
       "results": [
         {
-          "ruleId": "HW0001",
+          "ruleId": "EXAMPLE0001",
           "kind": "error",
           "formattedMessage": {
-            "specifierId": "fail",
+            "specifierId": "zerofileversion",
             "arguments": [
-              "bad.txt",
-              "C:\\Input\\bad.txt",
-              "0",
-              "0"
+              "HelloWorldSkim.exe",
+              "0.0.0.0"
             ]
           },
           "locations": [
             {
               "analysisTarget": [
                 {
-                  "uri": "file:///C:/Input/bad.txt",
-                  "mimeType": "text/plain",
-                  "region": {
-                    "startLine": 1,
-                    "startColumn": 1,
-                    "endLine": 1,
-                    "endColumn": 11
-                  }
+                  "uri": "file:///C:/Input/HelloWorldSkim.exe",
+                  "mimeType": "application/octet-stream"
                 }
               ]
             }
@@ -90,14 +82,15 @@ Analysis completed successfully.
       ],
       "ruleInfo": [
         {
-          "id": "HW0001",
-          "name": "HelloWorldSkimmer",
-          "shortDescription": "Verifies a file does not contain the word 'helloworld'.",
-          "fullDescription": "Verifies a file does not contain the word 'helloworld'.",
+          "id": "EXAMPLE0001",
+          "name": "FileVersionSkimmer",
+          "shortDescription": "Verifies that executables and libraries have valid file versions.",
+          "fullDescription": "Verifies that executables and libraries have valid file versions.",
           "options": {},
           "formatSpecifiers": {
-            "pass": "The word 'helloworld' was not found in the text file {0}",
-            "fail": "The word 'helloworld' was found in the text file {0} on line {1}, column {2}"
+            "pass": "The file {0} has a valid file version of {1}.",
+            "emptyfileversion": "The file {0} contains an empty file version.",
+            "zerofileversion": "The file {0} contains an invalid file version: {1}"
           },
           "properties": {}
         }
