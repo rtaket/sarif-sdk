@@ -5,11 +5,27 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
+using System.Text;
 
 namespace Microsoft.CodeAnalysis.Sarif
 {
     public static class ExtensionMethods
     {
+        public static string Base64Encode(this string input)
+        {
+            if (input == null) { throw new ArgumentNullException("input"); }
+
+            var bytes = Encoding.UTF8.GetBytes(input);
+            return Convert.ToBase64String(bytes);
+        }
+
+        public static string Base64Decode(this string encodedInput)
+        {
+            if (encodedInput == null) { throw new ArgumentNullException("encodedInput"); }
+
+            var bytes = Convert.FromBase64String(encodedInput);
+            return Encoding.UTF8.GetString(bytes);
+        }
 
         public static string FormatForVisualStudio(this Region region)
         {
