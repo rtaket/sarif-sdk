@@ -119,9 +119,9 @@
         
         <!-- These are the tabs which display the result information. -->
         <TabControl Grid.Row="1"
-                    SelectedValue="{Binding SelectedTab, Mode=TwoWay}"
+                    SelectedItem="{Binding SelectedTab, Mode=TwoWay}"
                     BorderThickness="0 1 0 0">
-            <TabItem>
+            <TabItem x:Name="LocationsTab">
                 <TabItem.Header>
                     <DockPanel Margin="5 0 5 0">
                         <TextBlock DockPanel.Dock="Left" Text="Locations" />
@@ -136,7 +136,8 @@
                 <ContentControl ContentTemplate="{StaticResource CodeLocationCollectionTemplate}"
                                 Content="{Binding}" />
             </TabItem>
-            <TabItem Visibility="{Binding CodeFlows, Converter={StaticResource collectionToVisibility0Converter}}">
+            <TabItem x:Name="CodeFlowsTab"
+                     Visibility="{Binding CodeFlows, Converter={StaticResource collectionToVisibility0Converter}}">
                 <TabItem.Header>
                     <DockPanel Margin="5 0 5 0">
                         <TextBlock DockPanel.Dock="Left"
@@ -153,7 +154,8 @@
                 <ContentControl ContentTemplate="{StaticResource AnnotatedCodeLocationCollectionDataGridTemplate}"
                                 Content="{Binding CodeFlows}" />
             </TabItem>
-            <TabItem Visibility="{Binding Stacks, Converter={StaticResource collectionToVisibility0Converter}}">
+            <TabItem x:Name="StacksTab"
+                     Visibility="{Binding Stacks, Converter={StaticResource collectionToVisibility0Converter}}">
                 <TabItem.Header>
                     <DockPanel Margin="5 0 5 0">
                         <TextBlock DockPanel.Dock="Left"
@@ -171,7 +173,8 @@
                                 Content="{Binding Stacks}"
                                 Margin="0,-1,0,1" />
             </TabItem>
-            <TabItem Visibility="{Binding Fixes, Converter={StaticResource collectionToVisibility0Converter}}">
+            <TabItem x:Name="FixesTab"
+                     Visibility="{Binding Fixes, Converter={StaticResource collectionToVisibility0Converter}}">
                 <TabItem.Header>
                     <DockPanel Margin="5 0 5 0">
                         <TextBlock DockPanel.Dock="Left"
@@ -188,7 +191,7 @@
                 <ContentControl ContentTemplate="{StaticResource FixCollectionTemplate}"
                                 Content="{Binding Fixes}" />
             </TabItem>
-            <TabItem>
+            <TabItem x:Name="InfoTab">
                 <TabItem.Header>
                     <TextBlock Text="Info"
                                Margin="5 0 5 0" />

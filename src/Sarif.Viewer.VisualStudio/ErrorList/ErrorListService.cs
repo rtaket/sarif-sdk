@@ -66,6 +66,11 @@ namespace Microsoft.Sarif.Viewer.ErrorList
 
         private static void ProcessSarifLog(SarifLog sarifLog, string logFilePath)
         {
+            if (sarifLog.Runs.Count > 0)
+            {
+                Telemetry.Instance.OpenResultFile(sarifLog.Runs[0]);
+            }
+
             foreach (Run run in sarifLog.Runs)
             {
                 Instance.WriteRunToErrorList(run, logFilePath);

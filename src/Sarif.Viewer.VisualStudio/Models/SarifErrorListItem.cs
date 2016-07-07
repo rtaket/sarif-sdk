@@ -9,6 +9,7 @@ using Microsoft.VisualStudio.Text;
 using Microsoft.Sarif.Viewer.Models;
 using System;
 using Microsoft.Sarif.Viewer.Sarif;
+using System.Windows.Controls;
 
 namespace Microsoft.Sarif.Viewer
 {
@@ -18,7 +19,7 @@ namespace Microsoft.Sarif.Viewer
         private ToolModel _tool;
         private RuleModel _rule;
         private InvocationModel _invocation;
-        private string _selectedTab;
+        private TabItem _selectedTab;
         private AnnotatedCodeLocationCollection _locations;
         private AnnotatedCodeLocationCollection _relatedLocations;
         private ObservableCollection<AnnotatedCodeLocationCollection> _codeFlows;
@@ -179,7 +180,7 @@ namespace Microsoft.Sarif.Viewer
             }
         }
 
-        public string SelectedTab
+        public TabItem SelectedTab
         {
             get
             {
@@ -188,6 +189,11 @@ namespace Microsoft.Sarif.Viewer
             set
             {
                 this._selectedTab = value;
+
+                if (value != null)
+                {
+                    Telemetry.Instance.SelectedTab(value.Name);
+                }
 
                 // If a new tab is selected, remove all the the markers for the
                 // previous tab.

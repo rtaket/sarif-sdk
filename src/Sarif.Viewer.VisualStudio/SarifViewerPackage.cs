@@ -8,6 +8,7 @@ using EnvDTE;
 using EnvDTE80;
 
 using Microsoft.VisualStudio.Shell;
+using Microsoft.ApplicationInsights;
 
 namespace Microsoft.Sarif.Viewer
 {
@@ -48,6 +49,9 @@ namespace Microsoft.Sarif.Viewer
 
             Dte = GetGlobalService(typeof(DTE)) as DTE2;
             ServiceProvider = this;
+
+            Telemetry.Instance.IsEnabled = true;
+            Telemetry.Instance.LoadedPackage();
         }
 
         public T GetService<S, T>()
@@ -80,6 +84,13 @@ namespace Microsoft.Sarif.Viewer
             RegisterEditorFactory(_sarifEditorFactory);
 
             CodeAnalysisResultManager.Instance.Register();
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            Telemetry.Instance.Dispose();
+
+            base.Dispose(disposing);
         }
 
         #endregion
