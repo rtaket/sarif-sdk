@@ -41,6 +41,7 @@
     <Compile Include="Controls\InternetHyperlink.xaml.cs">
       <DependentUpon>InternetHyperlink.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Converters\BooleanToCollapsedVisibilityConverter.cs" />
     <Compile Include="Converters\CollectionToVisiblity1Converter.cs" />
     <Compile Include="Converters\CollectionToVisiblity0Converter.cs" />
     <Compile Include="Converters\CollectionToCountConverter.cs" />
@@ -48,12 +49,18 @@
     <Compile Include="Converters\Int32ToVisibilityConverter.cs" />
     <Compile Include="Converters\MultipleStringsToVisibilityConverter.cs" />
     <Compile Include="Converters\FileExistsToBooleanConverter.cs" />
+    <Compile Include="Converters\ObjectToVisibilityConverter.cs" />
     <Compile Include="DelegateCommand.cs" />
     <Compile Include="DelegateCommandBase.cs" />
     <Compile Include="Models\InvocationModel.cs" />
     <Compile Include="Models\ReplacementModel.cs" />
     <Compile Include="Models\FileChangeModel.cs" />
     <Compile Include="Models\FixModel.cs" />
+    <Compile Include="Resource1.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resource1.resx</DependentUpon>
+    </Compile>
     <Compile Include="Sarif\Replacement.extensions.cs" />
     <Compile Include="Sarif\FileChange.extensions.cs" />
     <Compile Include="Sarif\Fix.extensions.cs" />
@@ -106,6 +113,7 @@
     <Compile Include="WeakEventHandlerManager.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Data\ruleLookup.json" />
     <Content Include="ApplicationInsights.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -294,6 +302,10 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Resource1.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resource1.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
     <EmbeddedResource Include="VSPackage.resx">
       <MergeWithCTO>true</MergeWithCTO>
       <ManifestResourceName>VSPackage</ManifestResourceName>

@@ -56,7 +56,7 @@ namespace Microsoft.Sarif.Viewer
             }
 
             this.Tool = run.Tool.ToToolModel();
-            this.Rule = rule.ToRuleModel(result.RuleId);
+            this.Rule = rule?.ToRuleModel(result.RuleId);
             this.Invocation = run.Invocation.ToInvocationModel();
 
             if (result.Locations != null)

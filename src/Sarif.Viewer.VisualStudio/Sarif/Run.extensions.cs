@@ -2,8 +2,10 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information. 
 
 using Microsoft.CodeAnalysis.Sarif;
+using Newtonsoft.Json.Linq;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,11 +14,35 @@ namespace Microsoft.Sarif.Viewer.Sarif
 {
     static class RunExtensions
     {
+        static object s_syncRoot = new object();
+        static JObject s_ruleMetadata;
+
+        static JObject RuleMetadata
+        {
+            get
+            {
+                if (s_ruleMetadata == null)
+                {
+                    lock (s_syncRoot)
+                    {
+                        if (s_ruleMetadata == null)
+                        {
+                            Byte[] ruleLookupBytes = Resource1.ruleLookup;
+                            string ruleLookupText = Encoding.UTF8.GetString(ruleLookupBytes);
+                            s_ruleMetadata = JObject.Parse(ruleLookupText);
+                        }
+                    }
+                }
+
+                return s_ruleMetadata;
+            }
+        }
+
         public static bool TryGetRule(this Run run, string ruleId, string ruleKey, out IRule rule)
         {
             rule = null;
 
-            if (run != null && run.Rules != null)
+            if (run != null && run.Rules != null && (ruleId != null || ruleKey != null))
             {
                 if (ruleKey != null)
                 {
@@ -25,6 +51,30 @@ namespace Microsoft.Sarif.Viewer.Sarif
                 else
                 {
                     rule = run.Rules[ruleId];
+                }
+            }
+            else if (ruleId != null)
+            {
+                // No rule in log file. 
+                // If the rule is a PREfast rule. create a "fake" rule using the external rule metadata file.
+                if (RuleMetadata[ruleId] != null)
+                {
+                    string ruleName = null;
+                    if (RuleMetadata[ruleId]["heading"] != null)
+                    {
+                        ruleName = RuleMetadata[ruleId]["heading"].Value<string>();
+                    }
+
+                    Uri helpUri = null;
+                    if (RuleMetadata[ruleId]["url"] != null)
+                    {
+                        helpUri = new Uri(RuleMetadata[ruleId]["url"].Value<string>());
+                    }
+
+                    if (ruleName != null || helpUri != null)
+                    {
+                        rule = new Rule(ruleId, ruleName, null, null, null, ResultLevel.Warning, helpUri, null);
+                    }
                 }
             }
 

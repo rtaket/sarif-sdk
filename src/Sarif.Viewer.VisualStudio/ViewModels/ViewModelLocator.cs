@@ -57,8 +57,15 @@ namespace Microsoft.Sarif.Viewer.ViewModels
             {
                 Id = "CA1823",
                 Name = "Avoid unused private fields",
-                HelpUri = "http://aka.ms/analysis/ca1823"
-             };
+                HelpUri = "http://aka.ms/analysis/ca1823",
+                Severity = "Unknown"
+            };
+
+            viewModel.Invocation = new InvocationModel()
+            {
+                CommandLine = @"""C:\Temp\Foo.exe"" target.file /o out.sarif",
+                FileName = @"C:\Temp\Foo.exe",
+            };
 
             viewModel.Locations.Add(new Models.AnnotatedCodeLocationModel()
             {
