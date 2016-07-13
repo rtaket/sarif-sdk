@@ -66,6 +66,8 @@ namespace Microsoft.Sarif.Viewer.ErrorList
 
                 SarifErrorListItem sarifError = sarifSnapshot.GetItem(index);
 
+                Telemetry.Instance.OpenErrorListResult(sarifError);
+
                 IVsWindowFrame frame;
                 if (!CodeAnalysisResultManager.Instance.TryNavigateTo(sarifError, out frame))
                 {

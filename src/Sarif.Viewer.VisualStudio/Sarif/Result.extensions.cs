@@ -49,7 +49,21 @@ namespace Microsoft.Sarif.Viewer.Sarif
 
             if (primaryLocation.ResultFile != null)
             {
-                return primaryLocation.ResultFile.Uri.IsAbsoluteUri ? primaryLocation.ResultFile.Uri.LocalPath : primaryLocation.ResultFile.Uri.ToString();
+                if (primaryLocation.ResultFile.Uri.IsAbsoluteUri)
+                {
+                    if (primaryLocation.ResultFile.Uri.Scheme.Equals("http", StringComparison.OrdinalIgnoreCase) || primaryLocation.ResultFile.Uri.Scheme.Equals("https", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return primaryLocation.ResultFile.Uri.AbsoluteUri;
+                    }
+                    else
+                    {
+                        return primaryLocation.ResultFile.Uri.LocalPath;
+                    }
+                }
+                else
+                {
+                    return primaryLocation.ResultFile.Uri.ToString();
+                }
             }
             else if (primaryLocation.AnalysisTarget != null)
             {

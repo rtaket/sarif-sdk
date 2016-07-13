@@ -152,6 +152,8 @@ namespace Microsoft.CodeAnalysis.Sarif.Writers
         {
             string sarifLoggerLocation = typeof(SarifLogger).Assembly.Location;
             tool.SarifLoggerVersion = FileVersionInfo.GetVersionInfo(sarifLoggerLocation).FileVersion;
+
+            Telemetry.Instance.LogTool(tool);
         }
 
         public SarifLogger(TextWriter textWriter, bool verbose)
@@ -167,6 +169,9 @@ namespace Microsoft.CodeAnalysis.Sarif.Writers
             _jsonTextWriter.DateFormatString = DateTimeConverter.DateTimeFormat;
 
             _issueLogJsonWriter = new ResultLogJsonWriter(_jsonTextWriter);
+
+            Telemetry.Instance.IsEnabled = true;
+            Telemetry.Instance.LoadedLogger();
         }
 
         public Dictionary<string, IRule> Rules
@@ -227,6 +232,13 @@ namespace Microsoft.CodeAnalysis.Sarif.Writers
 
             if (_jsonTextWriter == null) { _jsonTextWriter.Close(); }
 
+            if (_run != null)
+            {
+                Telemetry.Instance.LogRunMetrics(_run);
+            }
+
+            Telemetry.Instance.Dispose();
+
             GC.SuppressFinalize(this);
         }
 
@@ -239,11 +251,16 @@ namespace Microsoft.CodeAnalysis.Sarif.Writers
         {
             _issueLogJsonWriter.OpenResults();
             _run.Invocation = Invocation.Create();
+
+            Telemetry.Instance.AnalysisStarted();
         }
 
         public void AnalysisStopped(RuntimeConditions runtimeConditions)
         {
             _run.Invocation.EndTime = DateTime.UtcNow;
+
+            Telemetry.Instance.AnalysisStopped();
+            Telemetry.Instance.AnalysisDurationMetric(_run.Invocation.EndTime.Subtract(_run.Invocation.StartTime).TotalSeconds);
         }
 
         public void Log(IRule rule, Result result)
@@ -279,6 +296,8 @@ namespace Microsoft.CodeAnalysis.Sarif.Writers
             }
 
             _issueLogJsonWriter.WriteResult(result);
+
+            Telemetry.Instance.LogResult(rule, result);
         }
 
         public void AnalyzingTarget(IAnalysisContext context)

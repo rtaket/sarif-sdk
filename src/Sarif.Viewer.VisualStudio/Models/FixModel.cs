@@ -121,6 +121,8 @@ namespace Microsoft.Sarif.Viewer.Models
                     }
                 }
             }
+
+            Telemetry.Instance.PreviewFix();
         }
 
         private void ApplyFix(FixModel selectedFix)
@@ -152,6 +154,8 @@ namespace Microsoft.Sarif.Viewer.Models
                     }
                 }
             }
+
+            Telemetry.Instance.ApplyFix();
         }
 
         private bool TryFixFile(string filePath, IEnumerable<ReplacementModel> replacements, out byte[] fixedFile)

@@ -315,6 +315,8 @@ namespace Microsoft.Sarif.Viewer
             {
                 SarifViewerPackage.Dte.ExecuteCommand("File.OpenFile", $@"""{this.LogFilePath}"" /e:""JSON Editor""");
             }
+
+            Telemetry.Instance.ViewLogFile();
         }
 
         public override string ToString()
