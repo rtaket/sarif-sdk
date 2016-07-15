@@ -28,6 +28,7 @@ call SetCurrentVersion.cmd
 
 set SDK_VERSION_CONSTANTS=src\Sarif\VersionConstants.cs
 set DRV_VERSION_CONSTANTS=src\Sarif.Driver\VersionConstants.cs
+set DRV_VERSION_CONSTANTS=src\Sarif.Driver.TelemetryLogger\VersionConstants.cs
 
 @REM Rewrite VersionConstants.cs
 echo // Copyright (c) Microsoft. All rights reserved. Licensed under the MIT        >  %SDK_VERSION_CONSTANTS%

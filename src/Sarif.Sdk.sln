@@ -33,6 +33,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sarif.ValidationTests", "Sa
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sarif.Converters", "Sarif.Converters\Sarif.Converters.csproj", "{237DEFDF-1DFB-40A0-997F-12C8165DAA87}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Sarif.Driver.TelemetryLogger", "Sarif.Driver.TelemetryLogger\Sarif.Driver.TelemetryLogger.csproj", "{A94DD5D7-10F8-4066-B182-75595772DF1F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -151,6 +153,18 @@ Global
 		{237DEFDF-1DFB-40A0-997F-12C8165DAA87}.Release|x64.Build.0 = Release|Any CPU
 		{237DEFDF-1DFB-40A0-997F-12C8165DAA87}.Release|x86.ActiveCfg = Release|Any CPU
 		{237DEFDF-1DFB-40A0-997F-12C8165DAA87}.Release|x86.Build.0 = Release|Any CPU
+		{A94DD5D7-10F8-4066-B182-75595772DF1F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A94DD5D7-10F8-4066-B182-75595772DF1F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A94DD5D7-10F8-4066-B182-75595772DF1F}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{A94DD5D7-10F8-4066-B182-75595772DF1F}.Debug|x64.Build.0 = Debug|Any CPU
+		{A94DD5D7-10F8-4066-B182-75595772DF1F}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{A94DD5D7-10F8-4066-B182-75595772DF1F}.Debug|x86.Build.0 = Debug|Any CPU
+		{A94DD5D7-10F8-4066-B182-75595772DF1F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A94DD5D7-10F8-4066-B182-75595772DF1F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A94DD5D7-10F8-4066-B182-75595772DF1F}.Release|x64.ActiveCfg = Release|Any CPU
+		{A94DD5D7-10F8-4066-B182-75595772DF1F}.Release|x64.Build.0 = Release|Any CPU
+		{A94DD5D7-10F8-4066-B182-75595772DF1F}.Release|x86.ActiveCfg = Release|Any CPU
+		{A94DD5D7-10F8-4066-B182-75595772DF1F}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

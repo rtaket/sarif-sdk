@@ -158,7 +158,7 @@ namespace Microsoft.CodeAnalysis.Sarif.Driver
             return false;
         }
 
-        internal AggregatingLogger InitializeLogger(IAnalyzeOptions analyzeOptions)
+        protected virtual AggregatingLogger InitializeLogger(IAnalyzeOptions analyzeOptions)
         {
             var logger = new AggregatingLogger();
             logger.Loggers.Add(new ConsoleLogger(analyzeOptions.Verbose));
