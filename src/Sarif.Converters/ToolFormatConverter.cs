@@ -132,6 +132,7 @@ namespace Microsoft.CodeAnalysis.Sarif.Converters
             CreateConverterRecord<AndroidStudioConverter>(result, ToolFormat.AndroidStudio);
             CreateConverterRecord<CppCheckConverter>(result, ToolFormat.CppCheck);
             CreateConverterRecord<ClangAnalyzerConverter>(result, ToolFormat.ClangAnalyzer);
+            CreateConverterRecord<FindBugsConverter>(result, ToolFormat.FindBugs);
             CreateConverterRecord<FortifyConverter>(result, ToolFormat.Fortify);
             CreateConverterRecord<FxCopConverter>(result, ToolFormat.FxCop);
             CreateConverterRecord<StaticDriverVerifierConverter>(result, ToolFormat.StaticDriverVerifier);

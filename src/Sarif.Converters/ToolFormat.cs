@@ -14,6 +14,8 @@ namespace Microsoft.CodeAnalysis.Sarif.Converters
         ClangAnalyzer,
         /// <summary>CppCheck's file format.</summary>
         CppCheck,
+        /// <summary>FindBugs's file format.</summary>
+        FindBugs,
         /// <summary>Fortify's file format.</summary>
         Fortify,
         /// <summary>FxCop's file format.</summary>

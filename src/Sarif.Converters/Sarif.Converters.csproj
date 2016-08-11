@@ -37,8 +37,12 @@
     <EmbeddedResource Include="Schemata\FxCopReport.xsd">
       <SubType>Designer</SubType>
     </EmbeddedResource>
+    <None Include="Schemata\FindBugs\BugCollection.xsd">
+      <SubType>Designer</SubType>
+    </None>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FindBugsConverter.cs" />
     <Compile Include="AndroidStudioConverter.cs" />
     <Compile Include="AndroidStudioProblem.cs" />
     <Compile Include="AndroidStudioStrings.cs" />
@@ -49,6 +53,7 @@
     <Compile Include="CppCheckStrings.cs" />
     <Compile Include="Extensions.cs" />
     <Compile Include="FileInfoFactory.cs" />
+    <Compile Include="FindBugs\BugCollection.cs" />
     <Compile Include="FortifyConverter.cs" />
     <Compile Include="FortifyIssue.cs" />
     <Compile Include="FortifyPathElement.cs" />
