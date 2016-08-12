@@ -777,7 +777,7 @@ namespace Microsoft.CodeAnalysis.Sarif.Converters
                 if (startLine != 0)
                 {
                     // Don't set the "EndLine" if it's same as "StartLine"
-                    if (endLine != startLine)
+                    //if (endLine != startLine)
                     {
                         Region region = new Region();
                         loc.ResultFile.Region = region;
