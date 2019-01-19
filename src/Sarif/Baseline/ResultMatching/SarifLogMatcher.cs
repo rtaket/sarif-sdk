@@ -21,7 +21,7 @@ namespace Microsoft.CodeAnalysis.Sarif.Baseline.ResultMatching
         public SarifLogResultMatcher(
             IEnumerable<IResultMatcher> exactResultMatchers,
             IEnumerable<IResultMatcher> heuristicMatchers,
-            DictionaryMergeBehavior propertyBagMergeBehaviors = DictionaryMergeBehavior.None)
+            DictionaryMergeBehavior propertyBagMergeBehaviors = DictionaryMergeBehavior.InitializeFromMostRecent)
         {
             ExactResultMatchers = exactResultMatchers;
             HeuristicMatchers = heuristicMatchers;
@@ -378,13 +378,13 @@ namespace Microsoft.CodeAnalysis.Sarif.Baseline.ResultMatching
                 // Now that we've emptied any properties, we can ensure that the base value and the value to 
                 // merge are equivalent. If they aren't we throw: there is no good way to understand which
                 // construct to prefer.
-                S baseValue = baseDictionary[pair.Key];
-                if (!duplicateCatch.Equals(baseValue, pair.Value))
-                {
-                    throw new InvalidOperationException(
-                        "We do not, at this moment, support merging dictionary " +
-                        "value that share a key but have different content.");
-                }
+                //S baseValue = baseDictionary[pair.Key];
+                //if (!duplicateCatch.Equals(baseValue, pair.Value))
+                //{
+                //    throw new InvalidOperationException(
+                //        "We do not, at this moment, support merging dictionary " +
+                //        "value that share a key but have different content.");
+                //}
 
                 if (basePropertyBagHolder != null)
                 {

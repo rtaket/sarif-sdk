@@ -15,7 +15,9 @@ namespace Microsoft.CodeAnalysis.Sarif.Baseline.ResultMatching
     public class ExtractedResult
     {
         public Result Result { get; set; }
-        
+
         public Run OriginalRun { get; set; }
+
+        public int HashCode { get; set; }
     }
 }

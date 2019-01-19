@@ -32,9 +32,37 @@ namespace Microsoft.CodeAnalysis.Sarif.Baseline.ResultMatching.HeuristicMatchers
 
             foreach (ExtractedResult previousResult in previousResults)
             {
+                PartialFingerprintResultMatcher.PartialFingerprintResultComparer partialFingerprintComparer = Comparer as PartialFingerprintResultMatcher.PartialFingerprintResultComparer;
+
+                if (partialFingerprintComparer != null)
+                {
+                    previousResult.HashCode = partialFingerprintComparer.GetHashCode(previousResult, previousResults);
+                }
+                else
+                {
+                    previousResult.HashCode = this.Comparer.GetHashCode(previousResult);
+                }
+            }
+
+            foreach (ExtractedResult currentResult in currentResults)
+            {
+                PartialFingerprintResultMatcher.PartialFingerprintResultComparer partialFingerprintComparer = Comparer as PartialFingerprintResultMatcher.PartialFingerprintResultComparer;
+
+                if (partialFingerprintComparer != null)
+                {
+                    currentResult.HashCode = partialFingerprintComparer.GetHashCode(currentResult, currentResults);
+                }
+                else
+                {
+                    currentResult.HashCode = this.Comparer.GetHashCode(currentResult);
+                }
+            }
+
+            foreach (ExtractedResult previousResult in previousResults)
+            {
                 if (Comparer.ResultMatcherApplies(previousResult))
                 {
-                    int key = Comparer.GetHashCode(previousResult);
+                    int key = previousResult.HashCode;
                     if (baselineResults.ContainsKey(key))
                     {
                         baselineResults[key].Add(previousResult);
@@ -75,7 +103,7 @@ namespace Microsoft.CodeAnalysis.Sarif.Baseline.ResultMatching.HeuristicMatchers
         
         public bool TryMatchResult(Dictionary<int, List<ExtractedResult>> resultDictionary, ExtractedResult currentResult, out MatchedResults result)
         {
-            int unmodifiedKey = Comparer.GetHashCode(currentResult);
+            int unmodifiedKey = currentResult.HashCode;
             if (resultDictionary.ContainsKey(unmodifiedKey))
             {
                 List<ExtractedResult> matchingBaselineResult = resultDictionary[unmodifiedKey].Where(b => Comparer.Equals(b, currentResult)).ToList();

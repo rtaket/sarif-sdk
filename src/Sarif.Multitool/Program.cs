@@ -5,7 +5,7 @@ using CommandLine;
 
 namespace Microsoft.CodeAnalysis.Sarif.Multitool
 {
-    internal static class Program
+    public static class Program
     {
         /// <summary>The entry point for the SARIF multi utility.</summary>
         /// <param name="args">Arguments passed in from the tool's command line.</param>
