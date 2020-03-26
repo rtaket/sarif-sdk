@@ -10,22 +10,23 @@ using Microsoft.WorkItems.Pipeline;
 
 namespace Microsoft.CodeAnalysis.Sarif.WorkItems.Pipeline
 {
-    public class SarifWorkItemFilingPipeline : Pipeline<SarifWorkItemContextEx, SarifWorkItemContextEx>
+    public class SarifWorkItemFilerPipeline : Pipeline<SarifWorkItemContextEx, SarifWorkItemContextEx>
     {
-        public SarifWorkItemFilingPipeline(Action<SarifWorkItemContextEx> resultCallback)
+        public SarifWorkItemFilerPipeline(Action<SarifWorkItemContextEx> resultCallback)
         {
+            // Retrieve the pipeline steps that were defined in the pipelinesettings.json file.
             IOptions<PreprocessPipelineOption> workItemOptions = ServiceProviderFactory.ServiceProvider.GetService<IOptions<PreprocessPipelineOption>>();
 
-            this.Contruct(workItemOptions.Value);
+            // Construct the pipeline
+            this.ContructPipeline(workItemOptions.Value);
 
+            // Create the ActionBlock for the callback delegate.
             var callbackStep = new ActionBlock<SarifWorkItemContextEx>(resultCallback);
+            DataflowLinkOptions linkOptions = new DataflowLinkOptions() { PropagateCompletion = true };
 
-            DataflowLinkOptions linkOptions = new DataflowLinkOptions()
-            {
-                PropagateCompletion = true,
-            };
-
+            // Add the callback block to the end of the pipeline.
             ((ISourceBlock<SarifWorkItemContextEx>)this.EndBlock).LinkTo(callbackStep, linkOptions);
+            
             this.EndBlock = callbackStep;
         }
     }

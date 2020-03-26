@@ -35,17 +35,24 @@ namespace Microsoft.WorkItems
         {
             IServiceCollection services = new ServiceCollection();
 
+            // Read the settings files and register the service.
             IConfiguration config = GetConfiguration();
             services.AddSingleton(typeof(IConfiguration), config);
 
+            // Register the TelemetryChannel. This is so we can retrieve and flush the
+            // channel in the application.
             ITelemetryChannel channel = new InMemoryChannel();
             services.AddSingleton(typeof(ITelemetryChannel), channel);
 
+            // Create and register options (classes to access the config settings in the application)
             services.Configure<ServiceOption>(config.GetSection("Sarif-WorkItems:Service"));
             services.Configure<PreprocessPipelineOption>(config.GetSection("Sarif-WorkItems:PreprocessPipeline"));
             services.Configure<WorkItemFilerPipelineOption>(config.GetSection("Sarif-WorkItems:WorkItemFilerPipeline"));
 
-            // Register injected services, typically these are test services
+            // Register injected services. Any services registered here will
+            // take precedence over services defined in the appsettings.json file.
+            // Services registered here will typically be test services to overide the
+            // behavior of a production service.
             foreach (KeyValuePair<string, string> additionalService in additionalServices)
             {
                 Type serviceInteface = Type.GetType(additionalService.Key);
@@ -54,6 +61,7 @@ namespace Microsoft.WorkItems
                 services.AddTransient(serviceInteface, serviceImplementation);
             }
 
+            // Register any loggers
             services.AddLogging(builder =>
             {
                 if (config.GetSection(LoggingConsoleSection).Exists())
@@ -79,19 +87,24 @@ namespace Microsoft.WorkItems
                 o.TelemetryInitializers.Add(new OperationCorrelationTelemetryInitializer());
             });
 
+            // We need to build the service provider once to hydrate the options services.
             ServiceProvider = services.BuildServiceProvider();
 
             ILogger logger = ServiceProviderFactory.ServiceProvider.GetService<ILogger<ILogger>>();
             IOptions<ServiceOption> workItemOptions = ServiceProvider.GetService<IOptions<ServiceOption>>();
 
+            // Register the services defined in the appsettings.json file.
             foreach (ServiceStepOption stepServiceOption in workItemOptions.Value.ServiceSteps)
             {
                 logger.LogDebug($"Registering StepService {stepServiceOption.Name}");
                 Type serviceType = Type.GetType(stepServiceOption.ServiceType);
                 Type implementationType = Type.GetType(stepServiceOption.ImplementationType);
+
+                // Use the Try overload to ensure we do not override any services that have already been registered.
                 services.TryAddTransient(serviceType, implementationType);
             }
 
+            // Rebuild the service provider that now inclues the services from the appsettings.json file.
             ServiceProvider = services.BuildServiceProvider();
         }
 

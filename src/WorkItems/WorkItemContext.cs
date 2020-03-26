@@ -6,6 +6,9 @@ using System.Collections.Generic;
 
 namespace Microsoft.WorkItems
 {
+    /// <summary>
+    /// I needed to add this layer because I needed the FilingHostUri.
+    /// </summary>
     public class WorkItemContext
     {
         public WorkItemContext(WorkItemModel model, Uri filingHostUri)

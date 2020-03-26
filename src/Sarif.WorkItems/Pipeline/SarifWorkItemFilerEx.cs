@@ -36,7 +36,7 @@ namespace Microsoft.CodeAnalysis.Sarif.WorkItems.Pipeline
         {
             using (Logger.BeginScope(nameof(FileWorkItems)))
             {
-                SarifWorkItemFilingPipeline pipeline = new SarifWorkItemFilingPipeline(CreateWorkItems);
+                SarifWorkItemFilerPipeline pipeline = new SarifWorkItemFilerPipeline(CreateWorkItems);
                 pipeline.StartBlock.Post(context);
                 pipeline.StartBlock.Complete();
                 pipeline.EndBlock.Completion.Wait();
@@ -45,7 +45,7 @@ namespace Microsoft.CodeAnalysis.Sarif.WorkItems.Pipeline
 
         internal void CreateWorkItems(SarifWorkItemContextEx context)
         {
-            WorkItemFilingPipeline pipeline = new WorkItemFilingPipeline(Complete);
+            WorkItemFilerPipeline pipeline = new WorkItemFilerPipeline(Complete);
 
             foreach (WorkItemContext workItemContext in context.WorkItemContextsToProcess)
             {

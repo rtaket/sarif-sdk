@@ -9,22 +9,23 @@ using Microsoft.WorkItems.Options.Pipeline;
 
 namespace Microsoft.WorkItems.Pipeline
 {
-    public class WorkItemFilingPipeline : Pipeline<IEnumerable<WorkItemContext>, IEnumerable<WorkItemContext>>
+    public class WorkItemFilerPipeline : Pipeline<IEnumerable<WorkItemContext>, IEnumerable<WorkItemContext>>
     {
-        public WorkItemFilingPipeline(Action<IEnumerable<WorkItemContext>> resultCallback)
+        public WorkItemFilerPipeline(Action<IEnumerable<WorkItemContext>> resultCallback)
         {
+            // Retrieve the pipeline steps that were defined in the pipelinesettings.json file.
             IOptions<WorkItemFilerPipelineOption> workItemOptions = ServiceProviderFactory.ServiceProvider.GetService<IOptions<WorkItemFilerPipelineOption>>();
 
-            this.Contruct(workItemOptions.Value);
+            // Construct the pipeline
+            this.ContructPipeline(workItemOptions.Value);
 
+            // Create the ActionBlock for the callback delegate.
             var callbackStep = new ActionBlock<IEnumerable<WorkItemContext>>(resultCallback);
+            DataflowLinkOptions linkOptions = new DataflowLinkOptions() { PropagateCompletion = true };
 
-            DataflowLinkOptions linkOptions = new DataflowLinkOptions()
-            {
-                PropagateCompletion = true,
-            };
-
+            // Add the callback block to the end of the pipeline.
             ((ISourceBlock<IEnumerable<WorkItemContext>>)this.EndBlock).LinkTo(callbackStep, linkOptions);
+
             this.EndBlock = callbackStep;
         }
     }

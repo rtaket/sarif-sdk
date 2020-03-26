@@ -23,12 +23,18 @@ namespace Microsoft.WorkItems.Pipeline
 
         private ILogger Logger { get; }
 
-        protected void Contruct(PipelineOption options)
+        protected void ContructPipeline(PipelineOption options)
         {
-            DataflowLinkOptions linkOptions = new DataflowLinkOptions()
-            {
-                PropagateCompletion = true,
-            };
+            DataflowLinkOptions linkOptions = new DataflowLinkOptions() { PropagateCompletion = true };
+
+            // The PipelineOptions defines the steps to run in a pipeline. For each step, we're going
+            // to create a TranformBlock. The we'll link the TransformBlocks to form a pipeline.
+            // However since the types that define the step implementation are provided as strings in the config
+            // file, we need to use reflection to contstuct the TransformBlocks. The code below translates into something
+            // similar to this.
+            //var step1 = new TransformBlock<SarifLog, WorkItemContext>(new WorkItemContextFromSarifStep().Process);
+            //var step2 = new TransformBlock<WorkItemContext, WorkItemContext>(new RemoveOptionalDataStep().Process);
+            //step1.LinkTo(step2, linkOptions);
 
             object previousBlock = null;
 
@@ -37,23 +43,30 @@ namespace Microsoft.WorkItems.Pipeline
                 PipelineStepOption stepOption = options.PipelineSteps[i];
 
                 this.Logger.LogDebug($"Constructing PipelineStep {stepOption.Name}");
+
+                // Get the service type. i.e. the type of the service interface.
                 Type serviceType = Type.GetType(stepOption.ServiceType);
                 Type stepInterfaceType = serviceType.GetInterface("Microsoft.WorkItems.Pipeline.Steps.IStep`2");
 
+                // This is an instantiation of the step/service retrieved from the service factory.
                 object stepObject = ServiceProviderFactory.ServiceProvider.GetService(serviceType);
 
-                Type d1 = typeof(System.Threading.Tasks.Dataflow.TransformBlock<,>);
-                Type constructed = d1.MakeGenericType(stepInterfaceType.GetGenericArguments());
-
+                // Create the delegate for the step/service.
                 Type funcType = typeof(Func<,>);
                 Type genericFuncType = funcType.MakeGenericType(stepInterfaceType.GetGenericArguments());
                 Delegate func = Delegate.CreateDelegate(genericFuncType, stepObject, "Process");
 
-                var transformBlockObject = Activator.CreateInstance(constructed, func);
+                // Get the TransformBlock type.
+                Type blockType = typeof(System.Threading.Tasks.Dataflow.TransformBlock<,>);
+                Type constructedType = blockType.MakeGenericType(stepInterfaceType.GetGenericArguments());
 
+                // Create the TranformBlock.
+                object transformBlockObject = Activator.CreateInstance(constructedType, func);
+
+                // Link the blocks
                 if (previousBlock != null)
                 {
-                    MethodInfo linkToMethod = constructed.GetMethod("LinkTo");
+                    MethodInfo linkToMethod = constructedType.GetMethod("LinkTo");
                     linkToMethod.Invoke(previousBlock, new[] { transformBlockObject, linkOptions });
                 }
 
@@ -69,26 +82,6 @@ namespace Microsoft.WorkItems.Pipeline
 
                 previousBlock = transformBlockObject;
             }
-
-            //var step1 = new TransformBlock<SarifLog, WorkItemContext>(new WorkItemContextFromSarifStep().Process);
-            //var step2 = new TransformBlock<WorkItemContext, WorkItemContext>(new RemoveOptionalDataStep().Process);
-            //var step3 = new TransformBlock<WorkItemContext, WorkItemContext>(new SplitResultsStep().Process);
-            //var step4 = new TransformBlock<WorkItemContext, WorkItemContext>(new FilterWithPaasPolicyStep().Process);
-            //var step5 = new TransformBlock<WorkItemContext, WorkItemContext>(new AddWorkItemAreaPathsStep().Process);
-            //var step6 = new TransformBlock<WorkItemContext, WorkItemContext>(new AddWorkItemOwnersStep().Process);
-            //var step7 = new TransformBlock<WorkItemContext, IEnumerable<WorkItemModel>>(new ConvertToWorkItemModelStep().Process);
-            //var step8 = wifPipeline.StartBlock;
-
-            //step1.LinkTo(step2, linkOptions);
-            //step2.LinkTo(step3, linkOptions);
-            //step3.LinkTo(step4, linkOptions);
-            //step4.LinkTo(step5, linkOptions);
-            //step5.LinkTo(step6, linkOptions);
-            //step6.LinkTo(step7, linkOptions);
-            //step7.LinkTo(step8, linkOptions);
-
-            //this.StartBlock = step1;
-            //this.EndBlock = wifPipeline.EndBlock;
         }
     }
 }

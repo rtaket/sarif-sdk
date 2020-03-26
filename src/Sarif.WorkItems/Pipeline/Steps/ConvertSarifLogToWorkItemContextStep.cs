@@ -6,6 +6,7 @@ using Microsoft.CodeAnalysis.Sarif.Visitors;
 using Microsoft.WorkItems;
 using Microsoft.WorkItems.Pipeline.Steps;
 using Microsoft.WorkItems.Logging;
+using Microsoft.CodeAnalysis.WorkItems.Logging;
 
 namespace Microsoft.CodeAnalysis.Sarif.WorkItems.Pipeline.Steps
 {
@@ -13,20 +14,25 @@ namespace Microsoft.CodeAnalysis.Sarif.WorkItems.Pipeline.Steps
     {
         public override SarifWorkItemContextEx Process(SarifWorkItemContextEx input)
         {
-            for (int i = 0; i < input.SarifLogsToProcess.Count; i++)
+            using (TimingLog timing = new TimingLog(EventIds.ConvertSarifLogToWorkItemContextStep))
             {
-                SarifLog sarifLog = input.SarifLogsToProcess[i];
-                FilingClient filingClient = FilingClientFactory.Create(input.HostUri);
+                timing.CustomDimensions.Add("SarifLogsToProcessCount", input.SarifLogsToProcess.Count);
 
-                input.CurrentProvider = filingClient.CurrentProvider;
+                for (int i = 0; i < input.SarifLogsToProcess.Count; i++)
+                {
+                    SarifLog sarifLog = input.SarifLogsToProcess[i];
+                    FilingClient filingClient = FilingClientFactory.Create(input.HostUri);
 
-                var workItemModel = new SarifWorkItemModel(sarifLog, input);
-                workItemModel.OwnerOrAccount = filingClient.AccountOrOrganization;
-                workItemModel.RepositoryOrProject = filingClient.ProjectOrRepository;
+                    input.CurrentProvider = filingClient.Provider;
 
-                var workItemContext = new WorkItemContext(workItemModel, input.HostUri);
+                    var workItemModel = new SarifWorkItemModel(sarifLog, input);
+                    workItemModel.OwnerOrAccount = filingClient.AccountOrOrganization;
+                    workItemModel.RepositoryOrProject = filingClient.ProjectOrRepository;
 
-                input.WorkItemContextsToProcess.Add(workItemContext);
+                    var workItemContext = new WorkItemContext(workItemModel, input.HostUri);
+
+                    input.WorkItemContextsToProcess.Add(workItemContext);
+                }
             }
 
             return input;
