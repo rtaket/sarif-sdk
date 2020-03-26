@@ -1,8 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.CodeAnalysis.WorkItems.Logging;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.WorkItems.Logging;
 
 namespace Microsoft.WorkItems.Pipeline.Steps
 {
@@ -10,28 +12,35 @@ namespace Microsoft.WorkItems.Pipeline.Steps
     {
         public override IEnumerable<WorkItemContext> Process(IEnumerable<WorkItemContext> input)
         {
-            ParallelOptions parallelOptions = new ParallelOptions()
+            using (TimingLog timing = new TimingLog(EventIds.FileWorkItemsStep))
             {
-                MaxDegreeOfParallelism = 2,
-            };
+                timing.CustomDimensions.Add("InputCount", input.Count());
 
-            List<WorkItemModel> updatedModels = new List<WorkItemModel>();
-
-            Parallel.ForEach(input, parallelOptions, (context) =>
-            {
-                IConfiguration config = ServiceProviderFactory.ServiceProvider.GetService<IConfiguration>();
-
-                FilingClient filingClient = FilingClientFactory.Create(context.FilingHostUri);
-                filingClient.Connect(config["SarifWorkItemFilingPat"]).Wait();
-                var retModels = filingClient.FileWorkItems(new[] { context.Model }).Result;
-
-                lock (updatedModels)
+                ParallelOptions parallelOptions = new ParallelOptions()
                 {
-                    updatedModels.AddRange(retModels);
-                }
-            });
+                    MaxDegreeOfParallelism = 2,
+                };
 
-            return updatedModels.Select(model => new WorkItemContext(model, input.First().FilingHostUri));
+                List<WorkItemModel> updatedModels = new List<WorkItemModel>();
+
+                Parallel.ForEach(input, parallelOptions, (context) =>
+                {
+                    IConfiguration config = ServiceProviderFactory.ServiceProvider.GetService<IConfiguration>();
+
+                    FilingClient filingClient = FilingClientFactory.Create(context.FilingHostUri);
+                    filingClient.Connect(config["SarifWorkItemFilingPat"]).Wait();
+                    IEnumerable<WorkItemModel> retModels = filingClient.FileWorkItems(new[] { context.Model }).Result;
+
+                    lock (updatedModels)
+                    {
+                        updatedModels.AddRange(retModels);
+                    }
+                });
+
+                timing.CustomDimensions.Add("UpdatedCount", updatedModels.Count);
+
+                return updatedModels.Select(model => new WorkItemContext(model, input.First().FilingHostUri));
+            }
         }
     }
 }

@@ -10,5 +10,7 @@ namespace Microsoft.WorkItems.Logging
     {
         public static EventId LogsToProcessMetrics => new EventId(9001, nameof(LogsToProcessMetrics));
         public static EventId ConvertSarifLogToWorkItemContextStep => new EventId(9002, nameof(ConvertSarifLogToWorkItemContextStep));
+        public static EventId FileWorkItemsStep => new EventId(9003, nameof(FileWorkItemsStep));
+        public static EventId SarifWorkItemFilerEx_FileWorkItems => new EventId(9004, nameof(SarifWorkItemFilerEx_FileWorkItems));
     }
 }

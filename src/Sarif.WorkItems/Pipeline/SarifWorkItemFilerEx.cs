@@ -10,6 +10,7 @@ using System.Threading.Tasks;
 using System.Threading.Tasks.Dataflow;
 using Microsoft.ApplicationInsights.Channel;
 using Microsoft.CodeAnalysis.Sarif.Visitors;
+using Microsoft.CodeAnalysis.WorkItems.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.TeamFoundation.WorkItemTracking.WebApi.Models;
@@ -34,12 +35,15 @@ namespace Microsoft.CodeAnalysis.Sarif.WorkItems.Pipeline
 
         public virtual void FileWorkItems(SarifWorkItemContextEx context)
         {
-            using (Logger.BeginScope(nameof(FileWorkItems)))
+            using (TimingLog timing = new TimingLog(EventIds.SarifWorkItemFilerEx_FileWorkItems))
             {
-                SarifWorkItemFilerPipeline pipeline = new SarifWorkItemFilerPipeline(CreateWorkItems);
-                pipeline.StartBlock.Post(context);
-                pipeline.StartBlock.Complete();
-                pipeline.EndBlock.Completion.Wait();
+                using (Logger.BeginScope(nameof(FileWorkItems)))
+                {
+                    SarifWorkItemFilerPipeline pipeline = new SarifWorkItemFilerPipeline(CreateWorkItems);
+                    pipeline.StartBlock.Post(context);
+                    pipeline.StartBlock.Complete();
+                    pipeline.EndBlock.Completion.Wait();
+                }
             }
         }
 
