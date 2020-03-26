@@ -21,6 +21,10 @@ namespace Microsoft.WorkItems.Pipeline.Steps
 
             List<WorkItemModel> updatedModels = new List<WorkItemModel>();
 
+            // Hmm, this doesn't make sense in the current pipeline. We queue one item at a time,
+            // so there's never anything to parallelize. Instead, we need to set the MaxDegreeOfParallelism setting
+            // in the ExecutionDataflowBlockOptions when we create the TransferBlock.
+            // https://docs.microsoft.com/en-us/dotnet/api/system.threading.tasks.dataflow.executiondataflowblockoptions?view=netcore-3.1
             Parallel.ForEach(input, parallelOptions, (context) =>
             {
                 IConfiguration config = ServiceProviderFactory.ServiceProvider.GetService<IConfiguration>();
