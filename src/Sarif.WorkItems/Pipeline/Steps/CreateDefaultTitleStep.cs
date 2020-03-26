@@ -10,7 +10,7 @@ namespace Microsoft.CodeAnalysis.Sarif.WorkItems.Pipeline.Steps
 {
     public class CreateDefaultTitleStep : Step<SarifWorkItemContextEx, SarifWorkItemContextEx>, ICreateDefaultTitleStep
     {
-        public override SarifWorkItemContextEx Process(SarifWorkItemContextEx input)
+        public override SarifWorkItemContextEx ProcessInternal(SarifWorkItemContextEx input, IDictionary<string, object> customDimensions)
         {
             for (int i = 0; i < input.WorkItemContextsToProcess.Count; i++)
             {

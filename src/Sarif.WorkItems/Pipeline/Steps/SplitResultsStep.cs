@@ -10,7 +10,7 @@ namespace Microsoft.CodeAnalysis.Sarif.WorkItems.Pipeline.Steps
 {
     public class SplitResultsStep : Step<SarifWorkItemContextEx, SarifWorkItemContextEx>, ISplitResultsStep
     {
-        public override SarifWorkItemContextEx Process(SarifWorkItemContextEx input)
+        public override SarifWorkItemContextEx ProcessInternal(SarifWorkItemContextEx input, IDictionary<string, object> customDimensions)
         {
             Stopwatch splittingStopwatch = Stopwatch.StartNew();
 

@@ -8,7 +8,7 @@ namespace Microsoft.CodeAnalysis.Sarif.WorkItems.Pipeline.Steps
 {
     public class InsertOptionalDataStep : Step<SarifWorkItemContextEx, SarifWorkItemContextEx>, IInsertOptionalDataStep
     {
-        public override SarifWorkItemContextEx Process(SarifWorkItemContextEx input)
+        public override SarifWorkItemContextEx ProcessInternal(SarifWorkItemContextEx input, IDictionary<string, object> customDimensions)
         {
             OptionallyEmittedData optionallyEmittedData = input.DataToInsert;
             if (optionallyEmittedData != OptionallyEmittedData.None)

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using Microsoft.CodeAnalysis.WorkItems.Logging;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.WorkItems;
@@ -15,7 +16,19 @@ namespace Microsoft.WorkItems.Pipeline.Steps
         }
 
         public ILogger Logger { get; }
-        
-        public abstract TOut Process(TIn input);
+
+        public virtual TOut Process(TIn input)
+        {
+            string stepName = this.GetType().Name;
+
+            using (TimingLog timing = new TimingLog(new EventId(9000, stepName)))
+            {
+                timing.CustomDimensions.Add("StepName", stepName);
+
+                return this.ProcessInternal(input, timing.CustomDimensions);
+            }
+        }
+
+        public abstract TOut ProcessInternal(TIn input, IDictionary<string, object> customDimensions);
     }
 }

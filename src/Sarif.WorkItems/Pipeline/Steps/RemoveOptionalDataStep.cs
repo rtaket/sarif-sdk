@@ -8,7 +8,7 @@ namespace Microsoft.CodeAnalysis.Sarif.WorkItems.Pipeline.Steps
 {
     public class RemoveOptionalDataStep : Step<SarifWorkItemContextEx, SarifWorkItemContextEx>, IRemoveOptionalDataStep
     {
-        public override SarifWorkItemContextEx Process(SarifWorkItemContextEx input)
+        public override SarifWorkItemContextEx ProcessInternal(SarifWorkItemContextEx input, IDictionary<string, object> customDimensions)
         {
             OptionallyEmittedData optionallyEmittedData = input.DataToRemove;
             if (optionallyEmittedData != OptionallyEmittedData.None)
