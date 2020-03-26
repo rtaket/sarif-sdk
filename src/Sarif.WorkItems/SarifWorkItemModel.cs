@@ -15,11 +15,14 @@ namespace Microsoft.CodeAnalysis.Sarif.WorkItems
     {
         public Uri LocationUri { get; private set; }
 
+        public SarifLog SarifLog { get; }
+
         public SarifWorkItemModel(SarifLog sarifLog, SarifWorkItemContext context = null)
         {
             if (sarifLog == null) { throw new ArgumentNullException(nameof(sarifLog)); }
 
             this.Context = context ?? new SarifWorkItemContext();
+            this.SarifLog = sarifLog;
 
             var visitor = new ExtractAllArtifactLocationsVisitor();
             visitor.VisitSarifLog(sarifLog);

@@ -24,5 +24,7 @@ namespace Microsoft.WorkItems
         /// Title field name.
         /// </summary>
         public const string Title = "System.Title";
+
+        public const string ReproSteps = "Microsoft.VSTS.TCM.ReproSteps";
     }
 }

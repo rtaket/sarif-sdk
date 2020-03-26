@@ -1,0 +1,40 @@
+{
+  "Sarif-WorkItems": {
+    "PreprocessPipeline": {
+      "PipelineSteps": [
+        {
+          "Name": "RemoveOptionalDataStep",
+          "ServiceType": "Microsoft.CodeAnalysis.Sarif.WorkItems.Pipeline.Steps.IRemoveOptionalDataStep, Sarif.WorkItems, Version=2.2.2.0, Culture=neutral, PublicKeyToken=21a5e83f6f5bb844"
+        },
+        {
+          "Name": "InsertOptionalDataStep",
+          "ServiceType": "Microsoft.CodeAnalysis.Sarif.WorkItems.Pipeline.Steps.IInsertOptionalDataStep, Sarif.WorkItems, Version=2.2.2.0, Culture=neutral, PublicKeyToken=21a5e83f6f5bb844"
+        },
+        {
+          "Name": "SplitResultsStep",
+          "ServiceType": "Microsoft.CodeAnalysis.Sarif.WorkItems.Pipeline.Steps.ISplitResultsStep, Sarif.WorkItems, Version=2.2.2.0, Culture=neutral, PublicKeyToken=21a5e83f6f5bb844"
+        },
+        {
+          "Name": "ConvertSarifLogToWorkItemContextStep",
+          "ServiceType": "Microsoft.CodeAnalysis.Sarif.WorkItems.Pipeline.Steps.IConvertSarifLogToWorkItemContextStep, Sarif.WorkItems, Version=2.2.2.0, Culture=neutral, PublicKeyToken=21a5e83f6f5bb844"
+        },
+        {
+          "Name": "CreateDefaultDescriptionStep",
+          "ServiceType": "Microsoft.CodeAnalysis.Sarif.WorkItems.Pipeline.Steps.ICreateDefaultDescriptionStep, Sarif.WorkItems, Version=2.2.2.0, Culture=neutral, PublicKeyToken=21a5e83f6f5bb844",
+        },
+        {
+          "Name": "AppendSarifViewerFooterStep",
+          "ServiceType": "Microsoft.CodeAnalysis.Sarif.WorkItems.Pipeline.Steps.IAppendSarifViewerFooterStep, Sarif.WorkItems, Version=2.2.2.0, Culture=neutral, PublicKeyToken=21a5e83f6f5bb844",
+        }
+      ]
+    },
+    "WorkItemFilerPipeline": {
+      "PipelineSteps": [
+        {
+          "Name": "FileWorkItemsStep",
+          "ServiceType": "Microsoft.WorkItems.Pipeline.Steps.IFileWorkItemsStep, WorkItems, Version=2.2.2.0, Culture=neutral, PublicKeyToken=21a5e83f6f5bb844"
+        }
+      ]
+    }
+  }
+}
