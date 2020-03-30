@@ -17,6 +17,8 @@ namespace Microsoft.WorkItems.Pipeline.Steps
 
         public ILogger Logger { get; }
 
+        public virtual int MaxDegreeOfParallelism => 1;
+
         public virtual TOut Process(TIn input)
         {
             string stepName = this.GetType().Name;

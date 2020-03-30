@@ -60,8 +60,14 @@ namespace Microsoft.WorkItems.Pipeline
                 Type blockType = typeof(System.Threading.Tasks.Dataflow.TransformBlock<,>);
                 Type constructedType = blockType.MakeGenericType(stepInterfaceType.GetGenericArguments());
 
+                // Construct the block options
+                PropertyInfo maxDegreeOfParallelismProperty = stepInterfaceType.GetProperty("MaxDegreeOfParallelism");
+                int maxDegreeOfParallelism = (int)maxDegreeOfParallelismProperty.GetValue(stepObject);
+                ExecutionDataflowBlockOptions blockOptions = new ExecutionDataflowBlockOptions();
+                blockOptions.MaxDegreeOfParallelism = maxDegreeOfParallelism;
+
                 // Create the TranformBlock.
-                object transformBlockObject = Activator.CreateInstance(constructedType, func);
+                object transformBlockObject = Activator.CreateInstance(constructedType, func, blockOptions);
 
                 // Link the blocks
                 if (previousBlock != null)
